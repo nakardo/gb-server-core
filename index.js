@@ -17,7 +17,13 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function (socket) {
+let peers = 0;
+io.on('connection', (socket) => {
+    if (++peers == 1) gameboy.pauseResume();
+    socket.on('disconnect', () => {
+        if (!--peers) gameboy.pauseResume();
+    });
+
     socket.on('keydown', (keyCode) => gameboy.joypad.keyDown(keyCode));
     socket.on('keyup', (keyCode) => gameboy.joypad.keyUp(keyCode));
 });
@@ -27,6 +33,7 @@ io.on('connection', function (socket) {
 const gameboy = new Gameboy();
 gameboy.loadCart(fs.readFileSync('./roms/zelda.gb'));
 gameboy.start();
+gameboy.pauseResume();
 
 let i = 0;
 gameboy.gpu.on('frame', (canvas) => {
