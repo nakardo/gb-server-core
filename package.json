@@ -16,5 +16,23 @@
   },
   "engines": {
     "node": ">=6"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nakardo/gb-server.git"
+  },
+  "keywords": [
+    "nintendo",
+    "gameboy",
+    "handheld",
+    "emulator",
+    "game",
+    "socket",
+    "stream"
+  ],
+  "bugs": {
+    "url": "https://github.com/nakardo/gb-server/issues"
+  },
+  "homepage": "https://github.com/nakardo/gb-server#readme"
 }
