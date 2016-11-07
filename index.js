@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = require('express')();
 const server = require('http').Server(app);
@@ -11,9 +11,6 @@ const Gameboy = require('node-gameboy');
 // Emulator
 
 const gameboy = new Gameboy();
-gameboy.loadCart(fs.readFileSync('./roms/zelda.gb'));
-gameboy.start();
-gameboy.pauseResume();
 
 let i = 0;
 gameboy.gpu.on('frame', (canvas) => {
@@ -23,10 +20,18 @@ gameboy.gpu.on('frame', (canvas) => {
 
 // Server
 
+app.use(bodyParser.raw({ limit: '2mb' }));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
+});
+
+app.post('/load-cart', (req, res) => {
+    if (!req.body.length) return res.sendStatus(400);
+    gameboy.loadCart(req.body);
+    gameboy.start();
+    res.sendStatus(200);
 });
 
 let peers = 0;
