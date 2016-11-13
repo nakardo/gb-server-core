@@ -16,6 +16,7 @@ let i = 0;
 gameboy.gpu.on('frame', (canvas) => {
     if (++i % 2) return;
     io.emit('frame', canvas.toDataURL());
+    i = 0;
 });
 
 // Server

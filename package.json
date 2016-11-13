@@ -11,13 +11,12 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "node-gameboy": "^0.1.0",
+    "node-gameboy": "^0.2.0",
     "socket.io": "^1.5.1"
   },
   "engines": {
     "node": ">=6"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nakardo/gb-server.git"

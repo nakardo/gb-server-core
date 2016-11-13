@@ -3,6 +3,7 @@ var ctx = canvas.getContext('2d');
 
 var socket = io.connect();
 
+// Render
 // From: https://github.com/rauchg/weplay-web/blob/master/client/app.js
 
 var image = new Image;
@@ -17,6 +18,24 @@ socket.on('frame', function (data) {
         image.src = data;
     });
 });
+
+// Buttons
+
+var renderingAction = document.getElementById('rendering');
+var scaleAction = document.getElementById('scale');
+
+renderingAction.addEventListener('click', function () {
+    $(canvas).toggleClass('pixelated');
+});
+
+var sizes = ['160px', '320px', '640px'];
+
+scaleAction.addEventListener('click', function () {
+    var idx = sizes.indexOf(canvas.style.width || '320px');
+    canvas.style.width = sizes[++idx % 3];
+});
+
+// Joypad
 
 document.addEventListener('keydown', function (e) {
     socket.emit('keydown', e.keyCode);
