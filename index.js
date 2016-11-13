@@ -28,6 +28,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/ping', (req, res) => {
+    res.send('pong');
+});
+
 app.post('/load-cart', (req, res) => {
     if (!req.body.length) return res.sendStatus(400);
     gameboy.loadCart(req.body);
