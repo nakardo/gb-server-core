@@ -51,4 +51,4 @@ io.on('connection', (socket) => {
     socket.on('keyup', (keyCode) => gameboy.joypad.keyUp(keyCode));
 });
 
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
