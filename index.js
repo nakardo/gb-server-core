@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
     socket.on('keyup', (keyCode) => gameboy.joypad.keyUp(keyCode));
 });
 
-process.on('SIGINT', () => {
+process.on('SIGTERM', () => {
     try {
         redis.lpush('states', JSON.stringify(gameboy), (err) => {
             if (err) process.exit(1);
