@@ -24,7 +24,7 @@ if (fs.existsSync('./state.json')) {
 let i = 0;
 gameboy.gpu.on('frame', (canvas) => {
     if (++i % 2) return; // throttle to 30 fps.
-    io.emit('frame', canvas.toDataURL());
+    canvas.toDataURL((err, png) => io.emit('frame', png));
     i = 0;
 });
 
