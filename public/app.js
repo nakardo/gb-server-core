@@ -21,19 +21,18 @@ socket.on('frame', function (data) {
 
 // Buttons
 
-var renderingAction = document.getElementById('rendering');
-var scaleAction = document.getElementById('scale');
+function fullscreen () {
+    (
+        canvas.requestFullscreen ||
+        canvas.mozRequestFullScreen ||
+        canvas.webkitRequestFullscreen ||
+        canvas.msRequestFullscreen
+    )
+    .call(canvas);
+}
 
-renderingAction.addEventListener('click', function () {
-    $(canvas).toggleClass('pixelated');
-});
-
-var sizes = ['160px', '320px', '640px'];
-
-scaleAction.addEventListener('click', function () {
-    var idx = sizes.indexOf(canvas.style.width || '320px');
-    canvas.style.width = sizes[++idx % 3];
-});
+var button = document.getElementById('fullscreen');
+button.addEventListener('click', fullscreen);
 
 // Joypad
 
