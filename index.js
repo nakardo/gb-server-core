@@ -6,20 +6,25 @@ const express = require('express');
 const app = require('express')();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const Redis = require('ioredis');
 const Gameboy = require('node-gameboy');
 
 
 // Emulator
 
 const gameboy = new Gameboy();
-gameboy.loadCart(fs.readFileSync(process.env.ROM_PATH));
-gameboy.start();
+const redis = new Redis(process.env.REDIS_URL);
 
-if (fs.existsSync('./state.json')) {
-    debug('loading state');
-    const state = fs.readFileSync('./state.json').toString();
-    gameboy.fromJSON(JSON.parse(state));
-}
+redis.lrange('states', 0, 1, (err, result) => {
+    if (err) throw err;
+    gameboy.loadCart(fs.readFileSync(process.env.ROM_PATH));
+    gameboy.start();
+
+    if (result.length) {
+        debug('loading state');
+        gameboy.fromJSON(JSON.parse(result[0]));
+    }
+});
 
 let i = 0;
 gameboy.gpu.on('frame', (canvas) => {
@@ -40,9 +45,11 @@ io.on('connection', (socket) => {
 
 process.on('SIGINT', () => {
     try {
-        fs.writeFileSync('./state.json', JSON.stringify(gameboy));
-        debug('exited saving state');
-        process.exit(0);
+        redis.lpush('states', JSON.stringify(gameboy), (err) => {
+            if (err) process.exit(1);
+            debug('exited saving state');
+            process.exit(0);
+        });
     } catch (e) {
         debug('exited with error: %s', e);
         process.exit(1);
