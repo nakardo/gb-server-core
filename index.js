@@ -44,9 +44,15 @@ sub.on('message', (channel, keyCode) => {
 
 // Server
 
-process.on('SIGTERM', () => {
+function saveState (cb = () => {}) {
     debug('saving state');
-    redis.lpush('states', JSON.stringify(gameboy), (err) => {
+    redis.lpush('states', JSON.stringify(gameboy), cb);
+}
+
+setInterval(saveState, 1000 * 60 * 60 * 6);
+
+process.on('SIGTERM', () => {
+    saveState((err) => {
         if (err) {
             debug('exited with error: %s', err);
             process.exit(1);
