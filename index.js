@@ -34,13 +34,6 @@ gameboy.gpu.on('frame', (canvas) => {
     i = 0;
 });
 
-function saveState (cb = () => {}) {
-    debug('saving state');
-    redis.lpush('states', JSON.stringify(gameboy), cb);
-}
-
-setInterval(saveState, 1000 * 60 * 60 * 24);
-
 // Server
 
 app.use(express.static('public'));
@@ -59,7 +52,8 @@ io.on('connection', (socket) => {
 });
 
 process.on('SIGTERM', () => {
-    saveState((err) => {
+    debug('saving state');
+    redis.lpush('states', JSON.stringify(gameboy), (err) => {
         if (err) {
             debug('exited with error: %s', err);
             process.exit(1);
