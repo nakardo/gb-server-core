@@ -30,7 +30,9 @@ redis.lrange('states', 0, 1, (err, result) => {
 let i = 0;
 gameboy.gpu.on('frame', (canvas) => {
     if (++i % 2) return; // throttle to 30 fps.
-    canvas.toDataURL((err, png) => io.emit('frame', png));
+    canvas.toDataURL((err, png) => {
+        if (!err) io.emit('frame', png);
+    });
     i = 0;
 });
 
