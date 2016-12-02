@@ -1,5 +1,5 @@
 FROM node:wheezy
-LABEL name "gb-server"
+LABEL name "gb-server-core"
 
 RUN apt-get update && apt-get install -y libcairo2-dev libjpeg8-dev \
     libpango1.0-dev libgif-dev build-essential g++ && \
