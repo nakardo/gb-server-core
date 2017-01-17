@@ -2,6 +2,8 @@
 
 const debug = require('debug')('gb-server-core');
 const fs = require('fs');
+const express = require('express');
+const app = express();
 const Redis = require('ioredis');
 const redis = new Redis(process.env.REDIS_URL);
 const Gameboy = require('node-gameboy');
@@ -44,6 +46,8 @@ sub.on('message', (channel, keyCode) => {
 
 // Server
 
+app.get('/ping', (req, res) => res.sendStatus(200));
+
 function saveState (cb = () => {}) {
     debug('saving state');
     redis.lpush('states', JSON.stringify(gameboy), cb);
@@ -61,3 +65,5 @@ process.on('SIGTERM', () => {
         process.exit(0);
     });
 });
+
+app.listen(process.env.PORT || 3000);
